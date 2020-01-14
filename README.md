@@ -1,2 +1,2 @@
-# ApuntesSQL
-Apuntes sobre as bases da linguaxe SQL
+# Apuntes SQL
+Apuntes sobre las bases de el lenguaje SQL
