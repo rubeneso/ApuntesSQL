@@ -1,12 +1,13 @@
 # DQL - Consultas SQL
-## Sentencias y filtros
+**DQL** (Data Query Language) es el sub-lenguaje de SQL que agrupa los comandos necesarios para realizar cualquier tipo de consulta a una base de datos, para obtener los datos que podamos necesitar en un determinado momento.
 ### Índice
 - [Sentencia SELECT](#sentencia-select)
 - [Instrucción WHERE](#instrucción-where)
 - [Funciones](#funciones)
-  - [Funciones Reductoras](#funciones reductoras)
+  - [Funciones Reductoras](#funciones-reductoras)
 - [Instrucción GROUP BY](#instrucción-group-by)
-
+  - [HAVING](#having)
+## Sentencias y filtros
 ### Sentencia SELECT
 La sentencia de consulta de SQL es `SELECT`.
 Se usa para seleccionar los campos de los que queramos recuperar la información. Después de ella debe ir la sentencia `FROM`, que indica la tabla de la que sacamos los valores. Un ejemplo sería el siguiente:
