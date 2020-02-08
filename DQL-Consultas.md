@@ -1,4 +1,4 @@
-# Consultas SQL
+# DQL - Consultas SQL
 ## Sentencias y filtros
 ### Índice
 - [Sentencia SELECT](#sentencia-select)
