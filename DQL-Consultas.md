@@ -7,6 +7,7 @@
   - [Funciones Reductoras](#funciones-reductoras)
 - [Instrucción GROUP BY](#instrucción-group-by)
   - [HAVING](#having)
+- [Instrucción ORDER BY](#instrucción-order-by)
 ## Sentencias y filtros
 ### Sentencia SELECT
 La sentencia de consulta de SQL es `SELECT`.
@@ -16,11 +17,11 @@ Se usa para seleccionar los campos de los que queramos recuperar la información
 SELECT nombre, dni
 FROM alumnos;
 ```
-Es importante recalcar que todas las consultas en SQL se terminan con un punto y coma, es una regla del lenguaje. Los campos a recuperar se escriben uno a uno separados por comas. Para recuperar todos los campos de la tabla usamos el asterisco "*". Si en nuestro programa quisiéramos llamar a un campo de otra manera se puede usar `AS`. Por ejemplo, si después del `SELECT` ponemos `nombre AS nom` pasaríamos a poder usar "nom" para referirnos a "nombre" en todo el resto del programa.
+Es importante recalcar que todas las consultas en SQL se terminan con un punto y coma, es una regla del lenguaje. Los campos a recuperar se escriben uno a uno separados por comas. Para recuperar todos los campos de la tabla usamos el asterisco "*".
 
 ### Instrucción WHERE
 
-Si solo queremos recuperar las tuplas que cumplan una determinada condición usamos `WHERE`. Seguido del `WHERE` se pone un predicado, que se define como una función que devuelve "true" o "false". Esta instrucción se va a recorrer todas las tuplas de la tabla y solo devolverá aquellas tuplas que cumplan con las condiciones del predicado. Por ejemplo, si quisiéramos buscar a todos los alumnos que se llamaran Bernardo, escribiríamos:
+Si solo queremos recuperar las tuplas(filas) que cumplan una determinada condición usamos `WHERE`. Seguido del `WHERE` se pone un predicado, que se define como una función que devuelve "true" o "false". Esta instrucción se va a recorrer todas las tuplas de la tabla y solo devolverá aquellas tuplas que cumplan con las condiciones del predicado. Por ejemplo, si quisiéramos buscar a todos los alumnos que se llamaran Bernardo, escribiríamos:
 ```sql
 SELECT nombre
 FROM alumnos
@@ -37,21 +38,21 @@ WHERE nombre = 'Bernardo'
 SELECT nombre, edad
 FROM alumnos
 WHERE nombre = 'Bernardo'
-  AND edad = 18
-  OR edad = 19;
+  AND (edad = 18
+  OR edad = 19);
 ```
 
 
 
 Operadores para las condiciones: 
 
-* Igual que: = o LIKE
+* Igual que: = | LIKE
 * Menor que: <
 * Menor o igual que: <=
 * Mayor que: >
 * Mayor o igual que: >=
-* Distinto: <> o IS NOT
-* Nulo: null o IS NULL
+* Distinto: <> | IS NOT
+* Nulo: null | IS NULL
 
 Otras posibles condiciones del `WHERE` son:
 * `IN`: especificamos los valores que queremos que aparezcan en un campo:
@@ -151,3 +152,20 @@ GROUP BY continent HAVING SUM(population) > 100000000;
 ```
 
 > Selecciona los continentes en los que la suma de su población es mayor que 100 millones
+
+### Instrucción ORDER BY
+
+Como el nombre de la misma indica, se usa para ordenar una consulta según uno o varios campos, pudiendo hacerse de manera ascendiente y descendiente. La forma de usarla es la siguiente:
+```sql
+SELECT continent, name
+FROM world
+ORDER BY continent DESC;
+```
+> Esta consulta saca una lista de los continentes y países, ordenada de manera descendente por el campo "continent"
+```sql
+SELECT continent, name
+FROM world
+ORDER BY continent DESC, name ASC;
+```
+> Y esta otra saca una lista de los continentes y países ordenados primero por continente en orden descendiente y después ordenados por país en orden ascendente
+
