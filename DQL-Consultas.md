@@ -169,3 +169,9 @@ ORDER BY continent DESC, name ASC;
 ```
 > Y esta otra saca una lista de los continentes y países ordenados primero por continente en orden descendiente y después ordenados por país en orden ascendente
 
+### Consultas anidadas
+*TODO
+### Acceso a varias tablas - JOIN
+*TODO
+### Valores nulos
+*TODO
