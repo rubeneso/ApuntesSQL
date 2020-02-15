@@ -1,13 +1,20 @@
 # DQL - Consultas SQL
 **DQL** (Data Query Language) es el sub-lenguaje de SQL que agrupa los comandos necesarios para realizar cualquier tipo de consulta a una base de datos, para obtener los datos que podamos necesitar en un determinado momento.
 ### Índice
-- [Sentencia SELECT](#sentencia-select)
-- [Instrucción WHERE](#instrucción-where)
-- [Funciones](#funciones)
-  - [Funciones Reductoras](#funciones-reductoras)
-- [Instrucción GROUP BY](#instrucción-group-by)
-  - [HAVING](#having)
-- [Instrucción ORDER BY](#instrucción-order-by)
+- [DQL - Consultas SQL](#dql---consultas-sql)
+    - [Índice](#%c3%8dndice)
+  - [Sentencias y filtros](#sentencias-y-filtros)
+    - [Sentencia SELECT](#sentencia-select)
+    - [Instrucción WHERE](#instrucci%c3%b3n-where)
+    - [Funciones](#funciones)
+      - [Funciones reductoras](#funciones-reductoras)
+    - [Instrucción GROUP BY](#instrucci%c3%b3n-group-by)
+      - [HAVING](#having)
+    - [Instrucción ORDER BY](#instrucci%c3%b3n-order-by)
+    - [Sub-consultas o consultas anidadas](#sub-consultas-o-consultas-anidadas)
+      - [Sub-consultas sincronizadas](#sub-consultas-sincronizadas)
+    - [Acceso a varias tablas - JOIN](#acceso-a-varias-tablas---join)
+    - [Valores nulos](#valores-nulos)
 ## Sentencias y filtros
 ### Sentencia SELECT
 La sentencia de consulta de SQL es `SELECT`.
@@ -169,8 +176,20 @@ ORDER BY continent DESC, name ASC;
 ```
 > Y esta otra saca una lista de los continentes y países ordenados primero por continente en orden descendiente y después ordenados por país en orden ascendente
 
-### Consultas anidadas
-*TODO
+### Sub-consultas o consultas anidadas
+Las consultas anidadas son consultas que están dentro de otras consultas. Estas se suelen poner en el `WHERE` para comparar atributos. La sintaxis es la misma que una consulta normal, pero la sub-consulta deberá ir dentro de paréntesis "()" y no se puede poner inmediatamente después del `WHERE`, sino que tendrá que ponerse primero el atributo a comparar, después el operador y después la sub-consulta.
+```sql
+SELECT name
+FROM world
+WHERE population > (
+  SELECT population
+  FROM world
+  WHERE name = 'Russia'
+);
+```
+> Esta consulta sacaría todos los países cuya población es mayor que la población de Rusia
+#### Sub-consultas sincronizadas
+
 ### Acceso a varias tablas - JOIN
 *TODO
 ### Valores nulos
