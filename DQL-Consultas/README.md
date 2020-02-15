@@ -177,7 +177,7 @@ ORDER BY continent DESC, name ASC;
 > Y esta otra saca una lista de los continentes y países ordenados primero por continente en orden descendiente y después ordenados por país en orden ascendente
 
 ### Sub-consultas o consultas anidadas
-Las consultas anidadas son consultas que están dentro de otras consultas. Estas se suelen poner en el `WHERE` para comparar atributos. La sintaxis es la misma que una consulta normal, pero la sub-consulta deberá ir dentro de paréntesis "()" y no se puede poner inmediatamente después del `WHERE`, sino que tendrá que ponerse primero el atributo a comparar, después el operador y después la sub-consulta.
+Las consultas anidadas son consultas que están dentro de otras consultas. Estas se suelen poner en el `WHERE` para comparar atributos. La sintaxis es la misma que una consulta normal, pero la sub-consulta deberá ir dentro de paréntesis "()" y no se puede poner inmediatamente después del `WHERE`, sino que tendrá que ponerse primero el atributo a comparar, después el operador y después la sub-consulta. Otra cuestión importante sobre las sub-consultas es que están en un ámbito distinto a la consulta exterior. Por ejemplo, las tablas de la consulta exterior y de la interior no son las mismas, si se quisiera llamar a la tabla exterior habría que usar un alias.
 ```sql
 SELECT name
 FROM world
@@ -189,7 +189,19 @@ WHERE population > (
 ```
 > Esta consulta sacaría todos los países cuya población es mayor que la población de Rusia
 #### Sub-consultas sincronizadas
+Este tipo de sub-consultas funciona como un bucle anidado y hacen referencia a la fila actual de su consulta externa. En el `WHERE` de la sub-consulta se compara el mismo atributo pero de la tabla interior y de la exterior. Para hacer esto se deben usar alias distintos para la tabla de fuera y de dentro.
+```sql
+SELECT continent, name, population 
+FROM world AS w1
+WHERE population >= ALL(
+  SELECT population 
+  FROM world AS w2
+  WHERE w1.continent = w2.continent
+)
+```
+> Esta consulta sacaría continente, país y población del país con más población por cada contiente
 
+> Podemos leer el `WHERE` interior como "donde los valores correlacionados son iguales"
 ### Acceso a varias tablas - JOIN
 *TODO
 ### Valores nulos
