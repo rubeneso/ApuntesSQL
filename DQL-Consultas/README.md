@@ -16,6 +16,8 @@
     - [Acceso a varias tablas - JOIN](#acceso-a-varias-tablas---join)
       - [Self-JOIN](#self-join)
     - [Valores nulos](#valores-nulos)
+      - [INNER JOIN, LEFT JOIN, RIGHT JOIN](#inner-join-left-join-right-join)
+  - [Orden de ejecución](#orden-de-ejecuci%c3%b3n)
 ## Sentencias y filtros
 ### Sentencia SELECT
 La sentencia de consulta de SQL es `SELECT`.
@@ -49,11 +51,7 @@ WHERE nombre = 'Bernardo'
   AND (edad = 18
   OR edad = 19);
 ```
-
-
-
 Operadores para las condiciones: 
-
 * Igual que: = | LIKE
 * Menor que: <
 * Menor o igual que: <=
@@ -61,6 +59,8 @@ Operadores para las condiciones:
 * Mayor o igual que: >=
 * Distinto: <> | IS NOT
 * Nulo: null | IS NULL
+
+**Apunte:** no podemos usar "=" para comprobar que un valor sea nulo, se debe usar `IS NULL` o `IS NOT NULL`
 
 Otras posibles condiciones del `WHERE` son:
 * `IN`: especificamos los valores que queremos que aparezcan en un campo:
@@ -97,7 +97,7 @@ FROM world
 WHERE capital LIKE CONCAT(name, ' City');
 ```
 
-> Muestra las ciudades donde la capital sea igual que el nombre del país mas ' City'
+> Muestra las ciudades donde la capital sea igual que el nombre del país más ' City'
 
 * `REPLACE()`:  sirve para reemplazar caracteres dentro de una cadena. Requiere tres argumentos, el primero será la cadena en la que se va a reemplazar algo, el segundo los caracteres a reemplazar y el tercero los caracteres que se ponen en el lugar de los anteriores
 
@@ -107,6 +107,8 @@ FROM world;
 ```
 
 > Esta consulta mostraría la lista de países eliminando la letra 'a' de todos ellos
+
+* `COALESCE()`:  se suele utilizar para asignar un valor por defecto a los valores de un atributo que sean nulos. Se le pasan dos parámetros, el primero es el atributo del que se comprueba si tiene valores nulos y el segundo es el valor con el que se reemplaza el nulo
 
 * `ROUND()`:  redondea el número que se le pasa como primer parámetro. El segundo parámetro será el número de decimales a mostrar. Si el número es negativo se trunca el resultado en decenas (-1), centenas (-2)...
 * `LENGTH()`: devuelve el largo de la cadena que le pasamos como parámetro
@@ -125,7 +127,7 @@ SELECT DISTINCT continent
 FROM world;
 ```
 
-> En la tabla "world" cada país tiene su continente asociado, por lo tanto cada continente aparece repetido varias veces en la tabla. Con `DISTINCT` esta consulta sacaría una tabla con cinco tuplas, una por continente
+> En la tabla "world" cada país tiene su continente asociado, por lo tanto, cada continente aparece repetido varias veces en la tabla. Con `DISTINCT` esta consulta sacaría una tabla con cinco tuplas, una por continente
 
 #### Funciones reductoras 
 
@@ -190,7 +192,7 @@ WHERE population > (
 ```
 > Esta consulta sacaría todos los países cuya población es mayor que la población de Rusia
 #### Sub-consultas sincronizadas
-Este tipo de sub-consultas funciona como un bucle anidado y hacen referencia a la fila actual de su consulta externa. En el `WHERE` de la sub-consulta se compara el mismo atributo pero de la tabla interior y de la exterior. Para hacer esto se deben usar alias distintos para la tabla de fuera y de dentro.
+Este tipo de sub-consultas funciona como un bucle anidado y hacen referencia a la fila actual de su consulta externa. En el `WHERE` de la sub-consulta se compara el mismo atributo, pero de la tabla interior y de la exterior. Para hacer esto se deben usar alias distintos para la tabla de fuera y de dentro.
 ```sql
 SELECT continent, name, population 
 FROM world AS w1
@@ -204,13 +206,13 @@ WHERE population >= ALL(
 
 > Podemos leer el `WHERE` interior como "donde los valores correlacionados son iguales"
 ### Acceso a varias tablas - JOIN
-La sentencia `JOIN` permite acceder a más de una tabla a la vez en la misma consulta. Para ello se debe añadir `JOIN` después de la tabla que ya tengamos el el `FROM`, y también añadir un `ON` para indicar sobre que atributos se debe combinar la tabla. Si esto no se indica de ninguna manera, obtendríamos el producto cartesiano de las dos tablas, es decir, que por cada tupla de la primera tabla tendríamos todas las tuplas de la segunda. El `ON` es habitual que esté compuesto por la clave principal de una tabla y la clave ajena de la otra. En caso de que la relación de las tablas sea de N:M existirá una tabla intermedia formada por las claves ajenas de las dos tablas. Este es un ejemplo suponiendo que un alumno solo tiene un profesor, y un profesor puede tener varios alumnos:
+La sentencia `JOIN` permite acceder a más de una tabla a la vez en la misma consulta. Para ello se debe añadir `JOIN` después de la tabla que ya tengamos en el `FROM`, y también añadir un `ON` para indicar sobre que atributos se debe combinar la tabla. Si esto no se indica de ninguna manera, obtendríamos el producto cartesiano de las dos tablas, es decir, que por cada tupla de la primera tabla tendríamos todas las tuplas de la segunda. El `ON` es habitual que esté compuesto por la clave principal de una tabla y la clave ajena de la otra. En caso de que la relación de las tablas sea de N:M existirá una tabla intermedia formada por las claves ajenas de las dos tablas. Este es un ejemplo suponiendo que un alumno solo tiene un profesor, y un profesor puede tener varios alumnos:
 ```sql
 SELECT alumno.nombre
 FROM profesor JOIN alumno ON profesor.id = alumno.profeId
 WHERE profesor.nombre = 'Alicia';
 ```
-> Esta consulta saca una lista de los alumnos a los que Alicia imparte clase. Vease que se necesita hacer el `JOIN` ya que necesitamos el nombre del alumno y el nombre del profesor, que están en diferentes tablas
+> Esta consulta saca una lista de los alumnos a los que Alicia imparte clase. Véase que se necesita hacer el `JOIN` ya que necesitamos el nombre del alumno y el nombre del profesor, que están en diferentes tablas
 
 > Cuando se utiliza más de una tabla es recomendable que se ponga precediendo a cada atributo el nombre de la tabla a la que pertenece, para evitar confusiones y ver la consulta más clara
 
@@ -227,6 +229,31 @@ FROM pelicula
 
 **Apunte:** el predicado del `ON` puede moverse a un `WHERE` y la consulta seguiría funcionando igualmente
 #### Self-JOIN
-
+//TODO
 ### Valores nulos
-*TODO
+Los valores nulos pueden afectar al resultado de una consulta, ya que por ejemplo podrían dar un resultado incorrecto teniendo en cuenta que las funciones reductoras no cuentan los nulos o podrían hacer que el programa fallara. Por ello es habitual añadir el el `WHERE` un predicado que se asegure de que los campos que vamos a comparas no sean nulos con un `IS NOT NULL`.
+#### INNER JOIN, LEFT JOIN, RIGHT JOIN
+El `INNER JOIN` (que es lo mismo que poner solo `JOIN`) omite los valores nulos que pueda haber en los atributos del `ON`. Para hacer que no se omitan los valores valores nulos podemos usar `LEFT JOIN`, que devolverá todos los valores de la tabla de la izquierda, aunque en la tabla de la derecha haya valores nulos. Lo mismo hace `RIGHT JOIN` pero a la inversa
+```sql
+SELECT profesor.nombre, dept.nombre
+FROM profesor LEFT JOIN dept ON profesor.dept = dept.Id;
+```
+> Esta consulta saca una lista de todos los profesores, aunque haya profesores que tengan el valor de "dept" a nulo
+
+Esta consulta hace lo mismo que la anterior:
+```sql
+SELECT profesor.nombre, dept.nombre
+FROM dept RIGHT JOIN profesor ON profesor.dept = dept.Id;
+```
+## Orden de ejecución
+El orden de ejecución de los comandos de SQL-DQL es el siguiente:
+
+* FROM
+* ON
+* JOIN
+* WHERE
+* GROUP BY
+* HAVING
+* SELECT
+* DISTINCT
+* ORDER BY
