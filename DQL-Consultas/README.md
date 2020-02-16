@@ -1,23 +1,21 @@
 # DQL - Consultas SQL
 **DQL** (Data Query Language) es el sub-lenguaje de SQL que agrupa los comandos necesarios para realizar cualquier tipo de consulta a una base de datos, para obtener los datos que podamos necesitar en un determinado momento.
 ### Índice
-- [DQL - Consultas SQL](#dql---consultas-sql)
-    - [Índice](#%c3%8dndice)
-  - [Sentencias y filtros](#sentencias-y-filtros)
-    - [Sentencia SELECT](#sentencia-select)
-    - [Instrucción WHERE](#instrucci%c3%b3n-where)
-    - [Funciones](#funciones)
-      - [Funciones reductoras](#funciones-reductoras)
-    - [Instrucción GROUP BY](#instrucci%c3%b3n-group-by)
-      - [HAVING](#having)
-    - [Instrucción ORDER BY](#instrucci%c3%b3n-order-by)
-    - [Sub-consultas o consultas anidadas](#sub-consultas-o-consultas-anidadas)
-      - [Sub-consultas sincronizadas](#sub-consultas-sincronizadas)
-    - [Acceso a varias tablas - JOIN](#acceso-a-varias-tablas---join)
-      - [Self-JOIN](#self-join)
-    - [Valores nulos](#valores-nulos)
-      - [INNER JOIN, LEFT JOIN, RIGHT JOIN](#inner-join-left-join-right-join)
-  - [Orden de ejecución](#orden-de-ejecuci%c3%b3n)
+ - [Sentencias y filtros](#sentencias-y-filtros)
+   - [Sentencia SELECT](#sentencia-select)
+   - [Instrucción WHERE](#instrucci%c3%b3n-where)
+   - [Funciones](#funciones)
+     - [Funciones reductoras](#funciones-reductoras)
+   - [Instrucción GROUP BY](#instrucci%c3%b3n-group-by)
+     - [HAVING](#having)
+   - [Instrucción ORDER BY](#instrucci%c3%b3n-order-by)
+   - [Sub-consultas o consultas anidadas](#sub-consultas-o-consultas-anidadas)
+     - [Sub-consultas sincronizadas](#sub-consultas-sincronizadas)
+   - [Acceso a varias tablas - JOIN](#acceso-a-varias-tablas---join)
+     - [Self-JOIN](#self-join)
+   - [Valores nulos](#valores-nulos)
+     - [INNER JOIN, LEFT JOIN, RIGHT JOIN](#inner-join-left-join-right-join)
+ - [Orden de ejecución](#orden-de-ejecuci%c3%b3n)
 ## Sentencias y filtros
 ### Sentencia SELECT
 La sentencia de consulta de SQL es `SELECT`.
@@ -31,7 +29,7 @@ Es importante recalcar que todas las consultas en SQL se terminan con un punto y
 
 ### Instrucción WHERE
 
-Si solo queremos recuperar las tuplas(filas) que cumplan una determinada condición usamos `WHERE`. Seguido del `WHERE` se pone un predicado, que se define como una función que devuelve "true" o "false". Esta instrucción se va a recorrer todas las tuplas de la tabla y solo devolverá aquellas tuplas que cumplan con las condiciones del predicado. Por ejemplo, si quisiéramos buscar a todos los alumnos que se llamaran Bernardo, escribiríamos:
+Si solo queremos recuperar las tuplas (filas) que cumplan una determinada condición usamos `WHERE`. Seguido del `WHERE` se pone un predicado, que se define como una función que devuelve "true" o "false". Esta instrucción se va a recorrer todas las tuplas de la tabla y solo devolverá aquellas tuplas que cumplan con las condiciones del predicado. Por ejemplo, si quisiéramos buscar a todos los alumnos que se llamaran Bernardo, escribiríamos:
 ```sql
 SELECT nombre
 FROM alumnos
@@ -85,8 +83,17 @@ WHERE nombre LIKE 'R_%';
 ```
 > Todos los nombres que empiecen por "R" y tengan pegada a esa "R" un carácter o más
 
-* `ALL`: permite actual sobre una lista de valores? (select within select, 6)
-
+* `ALL`: permite actuar sobre una lista de valores
+```sql
+SELECT name
+FROM world
+WHERE population >= ALL(
+  SELECT population
+  FROM world
+  WHERE population > 0
+);
+```
+> Mostraría el país con mayor población del mundo
 ### Funciones
 Para ayudarnos a la hora de programar existen unas funciones que podemos usar para resolver ciertos problemas:
 
@@ -131,7 +138,7 @@ FROM world;
 
 #### Funciones reductoras 
 
-Este tipo de funciones van a reducir el número de tuplas resultado. Habitualmente estas funciones se van a aplicar en sub-tablas, que se generan con un `GROUP BY`. Estas funciones se ponen en el SELECT o en el HAVING del GROUP BY. Todas ignoran los valores **NULL**
+Este tipo de funciones van a reducir el número de tuplas resultado. Habitualmente estas funciones se van a aplicar en sub-tablas, que se generan con un `GROUP BY`. Estas funciones se ponen en el `SELECT` o en el `HAVING` del `GROUP BY`. Todas ignoran los valores **NULL**
 
 * `SUM()`: suma el contenido de las tuplas del atributo que le pasemos por parámetro
 * `COUNT()`: cuenta el número de tuplas con valor distinto a NULL del atributo que le pasemos por parámetro
@@ -229,7 +236,15 @@ FROM pelicula
 
 **Apunte:** el predicado del `ON` puede moverse a un `WHERE` y la consulta seguiría funcionando igualmente
 #### Self-JOIN
-//TODO
+El Self-JOIN es unir una tabla con sigo misma, utilizando los alias. Se utilizan para comparar valores de atributos de la misma tabla, o cuando hay una jerarquía dentro de la misma
+```sql
+SELECT a1.nombre, a2.nombre, aula
+FROM alumno AS a1
+  JOIN alumno AS a2 ON a1.id = a2.id
+WHERE a1.aula = a2.aula
+  AND a1.nombre <> a2.nombre;
+```
+> Sacaríamos parejas de alumnos que están en la misma clase
 ### Valores nulos
 Los valores nulos pueden afectar al resultado de una consulta, ya que por ejemplo podrían dar un resultado incorrecto teniendo en cuenta que las funciones reductoras no cuentan los nulos o podrían hacer que el programa fallara. Por ello es habitual añadir el el `WHERE` un predicado que se asegure de que los campos que vamos a comparas no sean nulos con un `IS NOT NULL`.
 #### INNER JOIN, LEFT JOIN, RIGHT JOIN
