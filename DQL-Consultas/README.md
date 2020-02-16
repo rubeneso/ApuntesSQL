@@ -14,6 +14,7 @@
     - [Sub-consultas o consultas anidadas](#sub-consultas-o-consultas-anidadas)
       - [Sub-consultas sincronizadas](#sub-consultas-sincronizadas)
     - [Acceso a varias tablas - JOIN](#acceso-a-varias-tablas---join)
+      - [Self-JOIN](#self-join)
     - [Valores nulos](#valores-nulos)
 ## Sentencias y filtros
 ### Sentencia SELECT
@@ -197,12 +198,35 @@ WHERE population >= ALL(
   SELECT population 
   FROM world AS w2
   WHERE w1.continent = w2.continent
-)
+);
 ```
 > Esta consulta sacaría continente, país y población del país con más población por cada contiente
 
 > Podemos leer el `WHERE` interior como "donde los valores correlacionados son iguales"
 ### Acceso a varias tablas - JOIN
-*TODO
+La sentencia `JOIN` permite acceder a más de una tabla a la vez en la misma consulta. Para ello se debe añadir `JOIN` después de la tabla que ya tengamos el el `FROM`, y también añadir un `ON` para indicar sobre que atributos se debe combinar la tabla. Si esto no se indica de ninguna manera, obtendríamos el producto cartesiano de las dos tablas, es decir, que por cada tupla de la primera tabla tendríamos todas las tuplas de la segunda. El `ON` es habitual que esté compuesto por la clave principal de una tabla y la clave ajena de la otra. En caso de que la relación de las tablas sea de N:M existirá una tabla intermedia formada por las claves ajenas de las dos tablas. Este es un ejemplo suponiendo que un alumno solo tiene un profesor, y un profesor puede tener varios alumnos:
+```sql
+SELECT alumno.nombre
+FROM profesor JOIN alumno ON profesor.id = alumno.profeId
+WHERE profesor.nombre = 'Alicia';
+```
+> Esta consulta saca una lista de los alumnos a los que Alicia imparte clase. Vease que se necesita hacer el `JOIN` ya que necesitamos el nombre del alumno y el nombre del profesor, que están en diferentes tablas
+
+> Cuando se utiliza más de una tabla es recomendable que se ponga precediendo a cada atributo el nombre de la tabla a la que pertenece, para evitar confusiones y ver la consulta más clara
+
+Esta sería otra consulta pero esta vez usando tablas que tienen una relación N:M:
+```sql
+SELECT pelicula.titulo, actor.nombre
+FROM pelicula 
+  JOIN casting ON pelicula.id = casting.peliculaId
+  JOIN actor   ON casting.actorId = actor.id;
+```
+> Esta consulta sacaría una lista de todos los actores y todas las peliculas que han hecho
+
+> Se usa la tabla casting porque es la que contiene las claves ajenas de las dos tablas y es la que se tiene que usar para poder relacionarlas y usarlas en la consulta
+
+**Apunte:** el predicado del `ON` puede moverse a un `WHERE` y la consulta seguiría funcionando igualmente
+#### Self-JOIN
+
 ### Valores nulos
 *TODO
