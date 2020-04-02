@@ -6,3 +6,4 @@ Apuntes sobre las bases del lenguaje SQL
 * [DQL - Consultas](DQL-Consultas/)
 * [DDL - Definicion Estructura](DDL-Definicion-Estructura/)
 * [DML - Manipulacion de datos](DML-Manipulacion-Datos/)
+* [Instalación del gestor de bases de datos MySQL](Instalacion-MYSQL/)
