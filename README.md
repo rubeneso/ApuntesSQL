@@ -9,3 +9,4 @@ Apuntes sobre las bases del lenguaje SQL
 * [Instalación del gestor de bases de datos MySQL](Instalacion-MYSQL/)
 * [Crear BD Proxecto-investigacion](Crear-BD-Proxecto-Investigacion/)
 * [Crear BD Naves-espaciais](Crear-BD-Naves-espaciais/)
+* [Ver estructura y datos de una BD](Ver-Estructura-y-Datos-de-una-BD/)
